@@ -1,20 +1,37 @@
 import React, {useState} from 'react';
 //mport logo from './logo.svg';
 import './App.css';
+import NamePicker from './namepicker'
 
 function App() {
+  const [messages,setMessages] = useState([]) //initial state should be an empty array
+  console.log(messages)
+
+
   return <main>
 
+    <header>
+      <div className = "logo-wrap">
+      <img className = "logo"
+        alt = "pic"
+        src = "https://www.pngarts.com/files/1/Message-PNG-Image-with-Transparent-Background.png"/>
+        <div className = "title">Talkie</div>
+        </div>
+        <div class = "namepicker"> <NamePicker onSave = {name => {}}/></div>
+    </header>
+ 
 
-   
-  <img classname="logo" src = "https://www.pngarts.com/files/1/Message-PNG-Image-with-Transparent-Background.png"/>
-  <header>  
-    <div class = "title">Talkie</div>
-  </header>
-
+  <div className = "messages">
   {/* html + jsx comment */}
+  {messages.map((m,i)=>{
+    return <div className = "message">{m}</div>
 
-  <TextInput onSend={t=>console.log(t)}/>
+  })}
+      
+  <TextInput onSend={(text)=>{
+    setMessages([text, ...messages]) //... spread operator
+  }}/> 
+  </div>
 
   </main>
 }
@@ -33,8 +50,8 @@ function TextInput(props){
 
     <div className = "sendButton">
     <button onClick={()=> {
-      if(props.onSend) props.onSend(text)
-      setText('')
+      if (text) props.onSend(text)
+        setText('')
     }}>
       Send
     </button>
