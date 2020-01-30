@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from 'react'
-//mport logo from './logo.svg';
 import './App.css';
 import {db, useDB} from './db'
 import NamePicker from './namepicker'
@@ -26,9 +25,8 @@ function Room(props) {
       <div className="logo-wrap">
         <img className="logo"
           alt="logo"
-          src="https://images.coollogo.com/images/prism-large-green.png" 
-        />
-        Chatter
+          src="https://www.pngarts.com/files/1/Message-PNG-Image-with-Transparent-Background.png"/>
+        Talkie
       </div>
       <NamePicker onSave={setName} />
     </header>

@@ -20,13 +20,13 @@ function useDB(room) {
     }
     useEffect(() => {
         store.collection(coll)
-        // .where('room','==',room)
+        .where('room','==',room)
         .onSnapshot(snap=> snap.docChanges().forEach(c=> {
             const {doc, type} = c
             if (type==='added') add({...doc.data(),id:doc.id})
             if (type==='removed') remove(doc.id)
         }))
-    }, [])
+    }, [room])
     return messages
 }
 
@@ -41,14 +41,14 @@ db.delete = function(id) {
 export { db, useDB }
 
 const firebaseConfig = {
-    apiKey: "AIzaSyDSgYz1ChHLO6weyxK1oShAu2WYydm9hZs",
-    authDomain: "chatapp2020-a4a27.firebaseapp.com",
-    databaseURL: "https://chatapp2020-a4a27.firebaseio.com",
-    projectId: "chatapp2020-a4a27",
-    storageBucket: "chatapp2020-a4a27.appspot.com",
-    messagingSenderId: "589577009354",
-    appId: "1:589577009354:web:753b36f63b74463a0a1c33",
-    measurementId: "G-G527XLD67M"
+    apiKey: "AIzaSyC9RtshYqMBoMUT-Nz-fwq_6zf5glQ0OtY",
+    authDomain: "talkie-2e6be.firebaseapp.com",
+    databaseURL: "https://talkie-2e6be.firebaseio.com",
+    projectId: "talkie-2e6be",
+    storageBucket: "talkie-2e6be.appspot.com",
+    messagingSenderId: "170527470492",
+    appId: "1:170527470492:web:f8954e3b20709aeb0f0e59",
+    measurementId: "G-RHD49LEQDS"
   };
 
 firebase.initializeApp(firebaseConfig)
