@@ -1,62 +1,85 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react'
 //mport logo from './logo.svg';
 import './App.css';
+import {db, useDB} from './db'
 import NamePicker from './namepicker'
+import { BrowserRouter, Route } from 'react-router-dom'
 
-function App() {
-  const [messages,setMessages] = useState([]) //initial state should be an empty array
-  console.log(messages)
+function App(){
+  useEffect(()=>{
+    const {pathname} = window.location
+    if(pathname.length<2) window.location.pathname='home'
+  }, [])
+  return <BrowserRouter>
+    <Route path="/:room" component={Room} />
+  </BrowserRouter>
+}
 
+function Room(props) {
+  const {room} = props.match.params
+  const [name, setName] = useState('')
+  const messages = useDB(room)
 
   return <main>
 
     <header>
-      <div className = "logo-wrap">
-      <img className = "logo"
-        alt = "pic"
-        src = "https://www.pngarts.com/files/1/Message-PNG-Image-with-Transparent-Background.png"/>
-        <div className = "title">Talkie</div>
-        </div>
-        <div class = "namepicker"> <NamePicker onSave = {name => {}}/></div>
+      <div className="logo-wrap">
+        <img className="logo"
+          alt="logo"
+          src="https://images.coollogo.com/images/prism-large-green.png" 
+        />
+        Chatter
+      </div>
+      <NamePicker onSave={setName} />
     </header>
- 
 
-  <div className = "messages">
-  {/* html + jsx comment */}
-  {messages.map((m,i)=>{
-    return <div className = "message">{m}</div>
+    <div className="messages">
+      {messages.map((m,i)=>{
+        return <div key={i} className="message-wrap"
+          from={m.name===name?'me':'you'}>
+          <div className="message">
+            <div className="msg-name">{m.name}</div>
+            <div className="msg-text">{m.text}</div>
+          </div>
+        </div>
+      })}
+    </div>
 
-  })}
-      
-  <TextInput onSend={(text)=>{
-    setMessages([text, ...messages]) //... spread operator
-  }}/> 
-  </div>
-
+    <TextInput onSend={(text)=> {
+      db.send({
+        text, name, ts: new Date(), room
+      })
+    }} />
+    
   </main>
 }
 
 function TextInput(props){
-  const [text, setText] = useState('')
-
-  //normal javascript comment
-
-
-  return <div className="text-input">
-    <input value={text} 
-    placeholder= "  Type a message, @name..."
-    onChange={e=>setText(e.target.value)}
+  var [text, setText] = useState('') 
+  // normal js comment
+  return <div className="text-input-wrap">
+    <input 
+      value={text} 
+      className="text-input"
+      placeholder="write your message"
+      onChange={e=> setText(e.target.value)}
+      onKeyPress={e=> {
+        if(e.key==='Enter') {
+          if(text) props.onSend(text)
+          setText('')
+        }
+      }}
     />
-
-    <div className = "sendButton">
     <button onClick={()=> {
-      if (text) props.onSend(text)
-        setText('')
-    }}>
-      Send
+      if(text) props.onSend(text)
+      setText('')
+    }} className="button"
+      disabled={!text}>
+      SEND
     </button>
-    </div>
-    
   </div>
 }
-export default App;
+
+
+
+export default App
